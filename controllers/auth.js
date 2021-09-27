@@ -50,12 +50,18 @@ exports.signUp = async(req,res) => {
 
 //TODO: signIn function
 
-// router.post('/signIn', async(req,res) => {
-//     const {email, password } = req.body;
+exports.signIn = async(req,res) => {
+    const {email, password } = req.body;
 
-//     const { success: emailExists, user } = checkEmailExist(email);
-//     if(!emailExists) {
-//         return res.status(400).json({success: true, message: "email does not exist"})
-//     }
-// } )
+    const { success: emailExists, user } = await checkEmailExist(email);
+    console.log(user, emailExists)
+    if(!emailExists) {
+        return res.status(400).json({success: false, message: "email does not exist"})
+    }
+    console.log(password, user.encrpted_password, password === user.encrpted_password);
+    if(password ===  user.encrpted_password){
+        return res.status(200).json({ success: true, message: 'login successfully'})
+    }
+    return res.status(200).json({ success: true, message: 'invalid password'})
+} 
 
