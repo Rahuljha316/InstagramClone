@@ -1,7 +1,12 @@
-const mongooose = require('mongoose');
+const mongoose = require('mongoose');
 
-const userSchema = new mongooose.Schema({
+const userSchema = new mongoose.Schema({
     name: {
+        type: String,
+        default: ' ',
+        maxlength: 40
+    },
+    userName: {
         type: String,
         required: true,
         maxlength: 40
@@ -18,14 +23,12 @@ const userSchema = new mongooose.Schema({
     encrpted_password: {
         type: String,
         required: true
-    },
-    timestamps: true
+    }
+},
+    {timestamps: true}
 
+);
 
-
-});
-
-const User = mongoose.model('User', userSchema);
-
-
-exports.User = User;
+//const User = mongoose.model('User', userSchema);
+// exports.User = User;
+module.exports= mongoose.model('User', userSchema);
