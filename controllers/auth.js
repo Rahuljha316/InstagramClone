@@ -3,6 +3,24 @@ const express = require('express');
 const router = express.Router();
 
 
+const bcrypt = require('bcrypt');
+
+async function run(){
+
+
+const saltRounds = 10;
+const myPlainTextPassword = 'abcd';
+
+
+const salt = await bcrypt.genSalt(saltRounds);
+const hash = await bcrypt.hash(myPlainTextPassword, salt);
+
+
+console.log(hash);
+
+
+}
+
 
 //TODO: make a function to check if email exist or not
 
@@ -41,6 +59,11 @@ exports.signUp = async(req,res) => {
         })
     }
 
+    
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const password = await bcrypt.hash(req.body.password, salt)
+    req.body.encrpted_password = password
     const user = new User(req.body)
     const newUser = await user.save();
     return res.status(200).send(newUser)
@@ -59,7 +82,9 @@ exports.signIn = async(req,res) => {
         return res.status(400).json({success: false, message: "email does not exist"})
     }
     console.log(password, user.encrpted_password, password === user.encrpted_password);
-    if(password ===  user.encrpted_password){
+
+    const isPasswordSame =await bcrypt.compare(password, user.encrpted_password )
+    if(isPasswordSame){
         return res.status(200).json({ success: true, message: 'login successfully'})
     }
     return res.status(200).json({ success: true, message: 'invalid password'})

@@ -6,6 +6,10 @@ const user = require('./routes/users');
 
 
 
+
+
+
+
 mongooose.connect('mongodb://localhost/gram')
   .then(() => console.log('Connect to MongoDB...'))
   .catch( err => console.error('Could not connect to MongoDB...'));
