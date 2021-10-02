@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 
 
 const bcrypt = require('bcrypt');
@@ -14,6 +15,8 @@ const myPlainTextPassword = 'abcd';
 
 const salt = await bcrypt.genSalt(saltRounds);
 const hash = await bcrypt.hash(myPlainTextPassword, salt);
+
+
 
 
 console.log(hash);
@@ -66,7 +69,9 @@ exports.signUp = async(req,res) => {
     req.body.encrpted_password = password
     const user = new User(req.body)
     const newUser = await user.save();
-    return res.status(200).send(newUser)
+    
+    const token = user.generateAuthToken()
+    return res.status(200).send({token})
 
 }
 
@@ -85,7 +90,10 @@ exports.signIn = async(req,res) => {
 
     const isPasswordSame =await bcrypt.compare(password, user.encrpted_password )
     if(isPasswordSame){
-        return res.status(200).json({ success: true, message: 'login successfully'})
+
+        const token = user.generateAuthToken()
+
+        return res.status(200).json({ success: true, message: 'login successfully', token})
     }
     return res.status(200).json({ success: true, message: 'invalid password'})
 } 

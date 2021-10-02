@@ -3,12 +3,7 @@ const mongooose = require('mongoose');
 const express = require('express');
 const app = express();
 const user = require('./routes/users');
-
-
-
-
-
-
+const config = require('./config/config.json');
 
 mongooose.connect('mongodb://localhost/gram')
   .then(() => console.log('Connect to MongoDB...'))
@@ -18,6 +13,8 @@ mongooose.connect('mongodb://localhost/gram')
 
 app.use(express.json());
 app.use('/api/users', user)
+
+
 
 
 
